@@ -400,5 +400,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 #Project preferences 
-TestConsoleApp/TestConsoleApp.sln
-RefValueTypesHomework/RefValueTypesHomework.sln
+**/*.sln
