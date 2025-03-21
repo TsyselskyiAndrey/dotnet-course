@@ -15,8 +15,6 @@ namespace Application.Abstractions
 
         Book? ReadBook(string title);
 
-        void AddRecipe(string bookTitle, Recipe recipe);
-
         IEnumerable<Book> FilterBooks(Func<Book, bool> filter);
 
         IEnumerable<Book> GetBooksByTitle(Predicate<string> titleFilter);

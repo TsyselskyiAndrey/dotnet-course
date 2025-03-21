@@ -3,7 +3,9 @@
     public class Recipe
     {
         public string Title { get; set; }
-        public string Ingredients { get; set; }
-        public string Instructions { get; set; }
+
+        public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
+
+        public List<Instruction> Instructions { get; set; } = new List<Instruction>();
     }
 }

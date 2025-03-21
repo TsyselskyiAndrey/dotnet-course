@@ -11,6 +11,7 @@ namespace RecipeBookManagementSystem
             IUserRepository userRepository = new UserRepository();
             IUserService userService = new UserService(userRepository);
             IBookService bookService = new BookService(userRepository);
+            IRecipeService recipyService = new RecipeService(bookService);
             while (true)
             {
                 Console.WriteLine("\n===== Recipe Book Management System =====");
@@ -115,11 +116,11 @@ namespace RecipeBookManagementSystem
                         string ingredients = Console.ReadLine()!;
                         Console.Write("Enter Recipe Instructions: ");
                         string instructions = Console.ReadLine()!;
-                        bookService.AddRecipe(bookTitleAnother, new Recipe
+                        recipyService.AddRecipe(bookTitleAnother, new Recipe
                         {
                             Title = recipeTitle,
-                            Ingredients = ingredients,
-                            Instructions = instructions
+                            Ingredients = new List<Ingredient>() { new Ingredient { IngredientId = 0, Name = ingredients } },
+                            Instructions = new List<Instruction>() { new Instruction { InstructionId = 0, Name = instructions } }
                         });
                         Console.WriteLine("\nRecipe added successfully!\n");
                         break;

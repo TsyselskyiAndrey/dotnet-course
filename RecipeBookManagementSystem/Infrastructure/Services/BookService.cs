@@ -45,18 +45,6 @@ namespace Infrastructure.Services
             return ViewAllBooks().Where(b => b.Title == title).FirstOrDefault();
         }
 
-        public void AddRecipe(string bookTitle, Recipe recipe)
-        {
-            try
-            {
-                ViewAllBooks().Where(b => b.Title == bookTitle).FirstOrDefault()?.Recipes.Add(recipe);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("No such a book!");
-            }
-        }
-
         public IEnumerable<Book> FilterBooks(Func<Book, bool> filter)
         {
             return ViewAllBooks().Where(b => filter(b));

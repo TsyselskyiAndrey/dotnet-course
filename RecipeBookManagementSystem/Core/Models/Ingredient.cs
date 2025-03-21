@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace Core.Models
 {
-    public class User
+    public class Ingredient
     {
-        public int UserId { get; set; }
+        public int IngredientId { get; set; }
 
         public string Name { get; set; }
-
-        public List<Book> Books { get; set; } = new List<Book>();
     }
 }
