@@ -10,7 +10,9 @@ namespace Application.Abstractions
     public interface IUserRepository
     {
         void AddUser(User user);
+
         User? GetUserById(int userId);
+
         IEnumerable<User> GetAllUsers();
     }
 }

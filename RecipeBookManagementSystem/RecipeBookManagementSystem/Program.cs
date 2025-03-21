@@ -10,10 +10,11 @@ namespace RecipeBookManagementSystem
         {
             IUserRepository userRepository = new UserRepository();
             IUserService userService = new UserService(userRepository);
-
+            IBookService bookService = new BookService(userRepository);
             while (true)
-            { 
-                Console.WriteLine("\n1. Register User");
+            {
+                Console.WriteLine("\n===== Recipe Book Management System =====");
+                Console.WriteLine("1. Register User");
                 Console.WriteLine("2. Publish Recipe Book");
                 Console.WriteLine("3. View All Books");
                 Console.WriteLine("4. Read Book");
@@ -25,13 +26,15 @@ namespace RecipeBookManagementSystem
                 Console.Write("Choose an option: ");
                 var choice = Console.ReadLine();
 
+                Console.Clear();
+
                 switch (choice)
                 {
                     case "1":
                         Console.Write("Enter your name: ");
                         string userName = Console.ReadLine()!;
                         userService.RegisterUser(userName);
-                        Console.WriteLine($"User '{userName}' registered successfully!");
+                        Console.WriteLine($"\nUser '{userName}' registered successfully!\n");
                         break;
 
                     case "2":
@@ -53,22 +56,29 @@ namespace RecipeBookManagementSystem
                         string title = Console.ReadLine()!;
                         Console.Write("Enter Description: ");
                         string description = Console.ReadLine()!;
-                        var book = new Book(title, description, user.Name);
+                        var book = new Book
+                        {
+                            Title = title,
+                            Description = description,
+                            Author = user.Name
+                        };
 
-                        userService.PublishBook(userId, book);
+                        bookService.PublishBook(userId, book);
+                        Console.WriteLine("\nBook published successfully!\n");
                         break;
 
                     case "3":
-                        var books = userService.ViewAllBooks();
+                        var books = bookService.ViewAllBooks();
                         if (!books.Any())
                         {
-                            Console.WriteLine("No books found.");
+                            Console.WriteLine("No books found.\n");
                         }
                         else
                         {
+                            Console.WriteLine("\n=== All Books ===");
                             foreach (var b in books)
                             {
-                                Console.WriteLine($"{b.Title} by {b.Author}");
+                                Console.WriteLine($"Title: {b.Title}\nAuthor: {b.Author}\nDescription: {b.Description}\n");
                             }
                         }
                         break;
@@ -76,27 +86,22 @@ namespace RecipeBookManagementSystem
                     case "4":
                         Console.Write("Enter Book Title: ");
                         string bookTitle = Console.ReadLine()!;
-                        var selectedBook = userService.ReadBook(bookTitle);
-                        if (selectedBook != null)
-                        {
-                            Console.WriteLine(selectedBook);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Book not found.");
-                        }
+                        var selectedBook = bookService.ReadBook(bookTitle);
+                        Console.WriteLine(selectedBook != null ? $"\n{selectedBook}\n" : "\nBook not found.\n");
                         break;
+
                     case "5":
                         var users = userService.GetAllUsers();
                         if (!users.Any())
                         {
-                            Console.WriteLine("No books found.");
+                            Console.WriteLine("No users found.\n");
                         }
                         else
                         {
+                            Console.WriteLine("\n=== Registered Users ===");
                             foreach (var u in users)
                             {
-                                Console.WriteLine(u);
+                                Console.WriteLine($"ID: {u.UserId} | Name: {u.Name}\n");
                             }
                         }
                         break;
@@ -104,33 +109,50 @@ namespace RecipeBookManagementSystem
                     case "6":
                         Console.Write("Enter Book Title: ");
                         string bookTitleAnother = Console.ReadLine()!;
-                        Console.Write("Enter Recipy Title: ");
+                        Console.Write("Enter Recipe Title: ");
                         string recipeTitle = Console.ReadLine()!;
-                        Console.Write("Enter Recipy Ingredients: ");
+                        Console.Write("Enter Recipe Ingredients: ");
                         string ingredients = Console.ReadLine()!;
-                        Console.Write("Enter Recipy Instructions: ");
+                        Console.Write("Enter Recipe Instructions: ");
                         string instructions = Console.ReadLine()!;
-                        userService.AddRecipe(bookTitleAnother, new Recipe(recipeTitle, ingredients, instructions));
+                        bookService.AddRecipe(bookTitleAnother, new Recipe
+                        {
+                            Title = recipeTitle,
+                            Ingredients = ingredients,
+                            Instructions = instructions
+                        });
+                        Console.WriteLine("\nRecipe added successfully!\n");
                         break;
+
                     case "7":
                         Console.Write("Enter Title to search: ");
                         string searchTitle = Console.ReadLine()!;
-                        foreach (var bookElem in userService.GetBooksByTitle(t => t.Contains(searchTitle, StringComparison.OrdinalIgnoreCase)))
+                        var filteredByTitle = bookService.GetBooksByTitle(t => t.Contains(searchTitle, StringComparison.OrdinalIgnoreCase));
+                        Console.WriteLine(filteredByTitle.Any() ? "\n=== Filtered Books ===" : "\nNo books found with that title.\n");
+                        foreach (var bookElem in filteredByTitle)
                         {
-                            Console.WriteLine($"{bookElem.Title} by {bookElem.Author}");
+                            Console.WriteLine($"Title: {bookElem.Title} | Author: {bookElem.Author}\n");
                         }
                         break;
+
                     case "8":
                         Console.Write("Enter Author to search: ");
                         string searchAuthor = Console.ReadLine()!;
-                        foreach (var bookElem in userService.GetBooksByAuthor(a => a.Contains(searchAuthor, StringComparison.OrdinalIgnoreCase)))
+                        var filteredByAuthor = bookService.GetBooksByAuthor(a => a.Contains(searchAuthor, StringComparison.OrdinalIgnoreCase));
+                        Console.WriteLine(filteredByAuthor.Any() ? "\n=== Filtered Books ===" : "\nNo books found by that author.\n");
+                        foreach (var bookElem in filteredByAuthor)
                         {
-                            Console.WriteLine($"{bookElem.Title} by {bookElem.Author}");
+                            Console.WriteLine($"Title: {bookElem.Title} | Author: {bookElem.Author}\n");
                         }
                         break;
 
                     case "0":
+                        Console.WriteLine("\nExiting the program...\n");
                         return;
+
+                    default:
+                        Console.WriteLine("\nInvalid option. Please try again.\n");
+                        break;
                 }
             }
         }

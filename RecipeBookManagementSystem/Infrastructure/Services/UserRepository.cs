@@ -12,9 +12,21 @@ namespace Infrastructure.Services
     {
         private readonly List<User> _users = new()
         {
-            new User(1, "Andrew"),
-            new User(2, "Sergey"),
-            new User(3, "Alex")
+            new User
+            {
+                UserId = 1,
+                Name = "Andrew"
+            },
+            new User
+            {
+                UserId = 2,
+                Name = "Sergey"
+            },
+            new User
+            {
+                UserId = 3,
+                Name = "Alex"
+            }
         };
 
         public void AddUser(User user)
