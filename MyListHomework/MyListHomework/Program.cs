@@ -31,6 +31,14 @@ namespace MyListHomework
             list.Add(8);
             list.Add(9);
             Print(list);
+            list.Reverse();
+            Print(list);
+            list.Reverse(1, 4);
+            Print(list);
+            list.Sort();
+            Print(list);
+            list.Sort((a, b) => b.CompareTo(a));
+            Print(list);
             list.Remove(0);
             list.Remove(9);
             list.Remove(0);
@@ -42,7 +50,6 @@ namespace MyListHomework
                 list.Clear();
             }
             Print(list);
-            
         }
     }
 }

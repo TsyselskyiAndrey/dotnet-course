@@ -81,11 +81,11 @@ namespace MyListHomework
         }
         public void Remove(T value) 
         {
-            for (int i = 0; i < values.Length; i++)
+            for (int i = 0; i < _count; i++)
             {
                 if(values[i] != null && values[i]!.Equals(value))
                 {
-                    for(int j = i; j < values.Length - 1; j++)
+                    for(int j = i; j < _count; j++)
                     {
                         values[j] = values[j + 1];
                     }
@@ -97,11 +97,11 @@ namespace MyListHomework
         }
         public void RemoveAt(int index)
         {
-            for (int i = 0; i < values.Length; i++)
+            for (int i = 0; i < _count; i++)
             {
                 if (i == index)
                 {
-                    for (int j = i; j < values.Length - 1; j++)
+                    for (int j = i; j < _count; j++)
                     {
                         values[j] = values[j + 1];
                     }
@@ -170,6 +170,44 @@ namespace MyListHomework
                 result[i] = values[i];
             }
             return result;
+        }
+
+        public void Reverse()
+        {
+            int left = 0, right = _count - 1;
+            while (left < right)
+            {
+                (values[left], values[right]) = (values[right], values[left]);
+                left++;
+                right--;
+            }
+        }
+
+        public void Reverse(int index, int count)
+        {
+            if (index < 0 || count < 0 || index + count > _count)
+                throw new ArgumentOutOfRangeException();
+
+            int left = index, right = index + count - 1;
+            while (left < right)
+            {
+                (values[left], values[right]) = (values[right], values[left]);
+                left++;
+                right--;
+            }
+        }
+
+        public void Sort()
+        {
+            Array.Sort(values, 0, _count);
+        }
+
+        public void Sort(Comparison<T> comparison)
+        {
+            if (comparison == null)
+                throw new ArgumentNullException(nameof(comparison));
+
+            Array.Sort(values, 0, _count, Comparer<T>.Create(comparison));
         }
 
         public IEnumerator<T> GetEnumerator()
