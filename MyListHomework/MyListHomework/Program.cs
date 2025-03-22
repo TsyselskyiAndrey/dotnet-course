@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace MyListHomework
 {
@@ -34,6 +35,14 @@ namespace MyListHomework
             list.Remove(9);
             list.Remove(0);
             Print(list);
+            list.Insert(list.IndexOf(1), 99);
+            Print(list);
+            if (list.Contains(6))
+            {
+                list.Clear();
+            }
+            Print(list);
+            
         }
     }
 }

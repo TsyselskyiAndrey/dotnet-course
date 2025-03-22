@@ -16,7 +16,7 @@ namespace MyListHomework
         public MyList()
         {
             _count = 0;
-            _capacity = 0;
+            _capacity = 4;
             values = new T[_capacity];
         }
         public MyList(int copacity)
@@ -62,11 +62,6 @@ namespace MyListHomework
         public void Add(T value)
         {
             Count++;
-            if(Capacity == 0)
-            {
-                Capacity = 4;
-                values = new T[_capacity];
-            }
             if (Capacity < Count)
             {
                 Capacity *= 2;
@@ -114,6 +109,67 @@ namespace MyListHomework
                     break;
                 }
             }
+        }
+
+        public void Clear()
+        {
+            _count = 0;
+            _capacity = 4;
+            values = new T[_capacity];
+        }
+
+        public bool Contains(T item)
+        {
+            for (int i = 0; i < _count; i++)
+            {
+                if (values[i]!.Equals(item))
+                    return true;
+            }
+            return false;
+        }
+
+        public int IndexOf(T item)
+        {
+            for (int i = 0; i < _count; i++)
+            {
+                if (values[i]!.Equals(item))
+                    return i;
+            }
+            return -1;
+        }
+
+        public void Insert(int index, T item)
+        {
+            if (index < 0 || index > _count)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            if (_count == _capacity)
+            {
+                Capacity *= 2;
+                T[] tmp = new T[Capacity];
+                for (int i = 0; i < _count; i++)
+                {
+                    tmp[i] = values[i];
+                }
+                values = tmp;
+            }
+
+            for (int i = _count; i > index; i--)
+            {
+                values[i] = values[i - 1];
+            }
+            values[index] = item;
+            _count++;
+        }
+
+        public T[] ToArray()
+        {
+            T[] result = new T[_count];
+            for (int i = 0; i < _count; i++)
+            {
+                result[i] = values[i];
+            }
+            return result;
         }
 
         public IEnumerator<T> GetEnumerator()
