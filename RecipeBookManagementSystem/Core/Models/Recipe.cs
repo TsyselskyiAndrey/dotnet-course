@@ -1,6 +1,8 @@
-﻿namespace Core.Models
+﻿using Core.Models.Common;
+
+namespace Core.Models
 {
-    public class Recipe
+    public class Recipe : BaseEntity
     {
         public string Title { get; set; }
 

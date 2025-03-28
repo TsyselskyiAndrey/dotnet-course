@@ -14,17 +14,17 @@ namespace Infrastructure.Services
         {
             new User
             {
-                UserId = 1,
+                Id = 1,
                 Name = "Andrew"
             },
             new User
             {
-                UserId = 2,
+                Id = 2,
                 Name = "Sergey"
             },
             new User
             {
-                UserId = 3,
+                Id = 3,
                 Name = "Alex"
             }
         };
@@ -36,7 +36,7 @@ namespace Infrastructure.Services
 
         public User? GetUserById(int userId)
         {
-            return _users.FirstOrDefault(u => u.UserId == userId);
+            return _users.FirstOrDefault(u => u.Id == userId);
         }
 
         public IEnumerable<User> GetAllUsers()
