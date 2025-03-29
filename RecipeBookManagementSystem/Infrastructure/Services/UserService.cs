@@ -21,7 +21,7 @@ namespace Infrastructure.Services
         public void RegisterUser(string name)
         {
             var newUser = new User();
-            newUser.UserId = _userRepository.GetAllUsers().Count() + 1;
+            newUser.Id = _userRepository.GetAllUsers().Count() + 1;
             newUser.Name = name;
             _userRepository.AddUser(newUser);
         }

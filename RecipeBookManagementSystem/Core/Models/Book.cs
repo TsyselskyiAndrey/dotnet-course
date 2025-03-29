@@ -1,6 +1,8 @@
-﻿namespace Core.Models
+﻿using Core.Models.Common;
+
+namespace Core.Models
 {
-    public class Book
+    public class Book : BaseEntity
     {
         public string Title { get; set; } 
 

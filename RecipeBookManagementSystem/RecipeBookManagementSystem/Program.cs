@@ -102,7 +102,7 @@ namespace RecipeBookManagementSystem
                             Console.WriteLine("\n=== Registered Users ===");
                             foreach (var u in users)
                             {
-                                Console.WriteLine($"ID: {u.UserId} | Name: {u.Name}\n");
+                                Console.WriteLine($"ID: {u.Id} | Name: {u.Name}\n");
                             }
                         }
                         break;
@@ -119,8 +119,8 @@ namespace RecipeBookManagementSystem
                         recipyService.AddRecipe(bookTitleAnother, new Recipe
                         {
                             Title = recipeTitle,
-                            Ingredients = new List<Ingredient>() { new Ingredient { IngredientId = 0, Name = ingredients } },
-                            Instructions = new List<Instruction>() { new Instruction { InstructionId = 0, Name = instructions } }
+                            Ingredients = new List<Ingredient>() { new Ingredient { Id = 0, Name = ingredients } },
+                            Instructions = new List<Instruction>() { new Instruction { Id = 0, Name = instructions } }
                         });
                         Console.WriteLine("\nRecipe added successfully!\n");
                         break;
