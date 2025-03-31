@@ -1,9 +1,8 @@
-﻿using Application.Abstractions.Persistence;
-using Core.Models;
+﻿using Core.Models;
 
 namespace Infrastructure.Repositories
 {
-    public class BookRepository : GenericRepository<Book>, IBookRepository
+    public class BookRepository : GenericRepository<Book>
     {
         public BookRepository(string filePath) : base(filePath)
         {
