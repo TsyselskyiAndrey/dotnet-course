@@ -29,7 +29,7 @@ namespace Infrastructure.Services
         public void AddUser(UserDto user)
         {
             var mapper = new Mapper<UserDto, User>();
-            User res = mapper.Map(user);
+            User res = (User)mapper.Map(user);
             res.Id = _users.Count + 1;
             _users.Add(res);
         }
@@ -42,14 +42,14 @@ namespace Infrastructure.Services
             {
                 return null;
             }
-            UserDto res = mapper.Map(user);
+            UserDto res = (UserDto)mapper.Map(user);
             return res;
         }
 
         public IEnumerable<UserDto> GetAllUsers()
         {
             var mapper = new Mapper<User, UserDto>();
-            List<UserDto> res = mapper.Map(_users);
+            List<UserDto> res = (List<UserDto>)mapper.Map(_users);
             return res;
         }
     }

@@ -2,7 +2,6 @@
 {
     public interface IMapper<TSource, TDestination> where TDestination : new()
     {
-        TDestination Map(TSource source);
-        List<TDestination> Map(List<TSource> sourceList);
+        object Map(object source);
     }
 }

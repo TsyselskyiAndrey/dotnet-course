@@ -17,7 +17,7 @@ namespace Infrastructure.Services
             try
             {
                 var mapper = new Mapper<RecipeDto, Recipe>();
-                Recipe res = mapper.Map(recipe);
+                Recipe res = (Recipe)mapper.Map(recipe);
                 _bookService.ViewAllBooks().Where(b => b.Title == bookTitle).FirstOrDefault()?.Recipes.Add(res);
             }
             catch (Exception)

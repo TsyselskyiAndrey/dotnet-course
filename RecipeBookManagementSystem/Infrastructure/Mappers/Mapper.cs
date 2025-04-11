@@ -4,10 +4,25 @@ namespace Infrastructure.Mappers
 {
     public class Mapper<TSource, TDestination> : IMapper<TSource, TDestination> where TDestination : new()
     {
-        public TDestination Map(TSource source)
+        public object Map(object source)
         {
             if (source == null) return default;
 
+            if (source is TSource single)
+            {
+                return MapOneObject(single);
+            }
+
+            if (source is IEnumerable<TSource> list)
+            {
+                return list.Select(x => MapOneObject(x)).ToList();
+            }
+
+            throw new ArgumentException("Unsupported source type");
+        }
+
+        private TDestination MapOneObject(TSource source)
+        {
             var destination = new TDestination();
 
             foreach (var sourceProperty in typeof(TSource).GetProperties())
@@ -24,12 +39,6 @@ namespace Infrastructure.Mappers
             }
 
             return destination;
-        }
-
-        public List<TDestination> Map(List<TSource> sourceList)
-        {
-            if (sourceList == null) return new List<TDestination>();
-            return sourceList.Select(x => Map(x)).ToList();
         }
     }
 

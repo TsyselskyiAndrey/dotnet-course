@@ -23,7 +23,7 @@ namespace Infrastructure.Services
                 return;
             }
             var mapper = new Mapper<BookDto, Book>();
-            Book res = mapper.Map(book);
+            Book res = (Book)mapper.Map(book);
             user.Books.Add(res);
             Console.WriteLine($"Book '{book.Title}' published by {user.Name}!");
         }
@@ -36,7 +36,7 @@ namespace Infrastructure.Services
                 books.AddRange(user.Books);
             }
             var mapper = new Mapper<Book, BookDto>();
-            List<BookDto> res = mapper.Map(books);
+            List<BookDto> res = (List<BookDto>)mapper.Map(books);
             return res;
         }
 
