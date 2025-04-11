@@ -1,11 +1,5 @@
 ﻿using Application.Abstractions;
-using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Reflection.Metadata.BlobBuilder;
+using Application.DTOs;
 
 namespace Infrastructure.Services
 {
@@ -20,18 +14,17 @@ namespace Infrastructure.Services
 
         public void RegisterUser(string name)
         {
-            var newUser = new User();
-            newUser.Id = _userRepository.GetAllUsers().Count() + 1;
+            var newUser = new UserDto();
             newUser.Name = name;
             _userRepository.AddUser(newUser);
         }
 
-        public User? GetUserById(int userId)
+        public UserDto? GetUserById(int userId)
         {
             return _userRepository.GetUserById(userId);
         }
 
-        public IEnumerable<User>? GetAllUsers()
+        public IEnumerable<UserDto>? GetAllUsers()
         {
             return _userRepository.GetAllUsers();
         }

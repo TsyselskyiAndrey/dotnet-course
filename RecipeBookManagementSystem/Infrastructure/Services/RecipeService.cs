@@ -1,10 +1,7 @@
 ﻿using Application.Abstractions;
+using Application.DTOs;
 using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Infrastructure.Mappers;
 
 namespace Infrastructure.Services
 {
@@ -15,11 +12,13 @@ namespace Infrastructure.Services
         {
             _bookService = bookService;
         }
-        public void AddRecipe(string bookTitle, Recipe recipe)
+        public void AddRecipe(string bookTitle, RecipeDto recipe)
         {
             try
             {
-                _bookService.ViewAllBooks().Where(b => b.Title == bookTitle).FirstOrDefault()?.Recipes.Add(recipe);
+                var mapper = new Mapper<RecipeDto, Recipe>();
+                Recipe res = mapper.Map(recipe);
+                _bookService.ViewAllBooks().Where(b => b.Title == bookTitle).FirstOrDefault()?.Recipes.Add(res);
             }
             catch (Exception)
             {

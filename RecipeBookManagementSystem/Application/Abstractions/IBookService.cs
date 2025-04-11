@@ -1,24 +1,19 @@
-﻿using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.DTOs;
 
 namespace Application.Abstractions
 {
     public interface IBookService
     {
-        void PublishBook(int userId, Book book);
+        void PublishBook(int userId, BookDto book);
 
-        IEnumerable<Book> ViewAllBooks();
+        IEnumerable<BookDto> ViewAllBooks();
 
-        Book? ReadBook(string title);
+        BookDto? ReadBook(string title);
 
-        IEnumerable<Book> FilterBooks(Func<Book, bool> filter);
+        IEnumerable<BookDto> FilterBooks(Func<BookDto, bool> filter);
 
-        IEnumerable<Book> GetBooksByTitle(Predicate<string> titleFilter);
+        IEnumerable<BookDto> GetBooksByTitle(Predicate<string> titleFilter);
 
-        IEnumerable<Book> GetBooksByAuthor(Predicate<string> authorFilter);
+        IEnumerable<BookDto> GetBooksByAuthor(Predicate<string> authorFilter);
     }
 }

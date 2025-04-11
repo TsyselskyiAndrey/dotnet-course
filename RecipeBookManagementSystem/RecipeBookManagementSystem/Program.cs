@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions;
+using Application.DTOs;
 using Core.Models;
 using Infrastructure.Services;
 
@@ -57,7 +58,7 @@ namespace RecipeBookManagementSystem
                         string title = Console.ReadLine()!;
                         Console.Write("Enter Description: ");
                         string description = Console.ReadLine()!;
-                        var book = new Book
+                        var book = new BookDto
                         {
                             Title = title,
                             Description = description,
@@ -102,7 +103,7 @@ namespace RecipeBookManagementSystem
                             Console.WriteLine("\n=== Registered Users ===");
                             foreach (var u in users)
                             {
-                                Console.WriteLine($"ID: {u.Id} | Name: {u.Name}\n");
+                                Console.WriteLine($"Name: {u.Name}\n");
                             }
                         }
                         break;
@@ -116,7 +117,7 @@ namespace RecipeBookManagementSystem
                         string ingredients = Console.ReadLine()!;
                         Console.Write("Enter Recipe Instructions: ");
                         string instructions = Console.ReadLine()!;
-                        recipyService.AddRecipe(bookTitleAnother, new Recipe
+                        recipyService.AddRecipe(bookTitleAnother, new RecipeDto
                         {
                             Title = recipeTitle,
                             Ingredients = new List<Ingredient>() { new Ingredient { Id = 0, Name = ingredients } },

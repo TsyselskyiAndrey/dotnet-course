@@ -1,18 +1,13 @@
-﻿using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.DTOs;
 
 namespace Application.Abstractions
 {
     public interface IUserRepository
     {
-        void AddUser(User user);
+        void AddUser(UserDto user);
 
-        User? GetUserById(int userId);
+        UserDto? GetUserById(int userId);
 
-        IEnumerable<User> GetAllUsers();
+        IEnumerable<UserDto> GetAllUsers();
     }
 }
