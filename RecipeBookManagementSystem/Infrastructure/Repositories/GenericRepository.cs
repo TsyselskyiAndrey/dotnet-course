@@ -8,6 +8,7 @@ namespace Infrastructure.Repositories
     {
         private readonly string _filePath;
         private List<T> _entities;
+        private readonly object _lockObj = new();
 
         public GenericRepository(string filePath)
         {
@@ -20,50 +21,69 @@ namespace Infrastructure.Repositories
             if (!File.Exists(_filePath))
                 return new List<T>();
 
-            var json = File.ReadAllText(_filePath);
-            return JsonSerializer.Deserialize<List<T>>(json) ?? new List<T>();
+            try
+            {
+                var json = File.ReadAllText(_filePath);
+                return JsonSerializer.Deserialize<List<T>>(json) ?? new List<T>();
+            }
+            catch
+            {
+                return new List<T>();
+            }
         }
 
-        private void SaveToFile()
+        private async Task SaveToFileAsync()
         {
             var json = JsonSerializer.Serialize(_entities, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(_filePath, json);
+            await File.WriteAllTextAsync(_filePath, json);
         }
 
         public async Task<T> CreateAsync(T entity)
         {
-            entity.Id = _entities.Count + 1;
-            _entities.Add(entity);
-            SaveToFile();
-            return await Task.FromResult(entity);
+            lock (_lockObj)
+            {
+                entity.Id = _entities.Count + 1;
+                _entities.Add(entity);
+            }
+
+            await SaveToFileAsync();
+            return entity;
         }
 
         public async Task<T> DeleteAsync(T entity)
         {
-            _entities.Remove(entity);
-            SaveToFile();
-            return await Task.FromResult(entity);
+            lock (_lockObj)
+            {
+                _entities.Remove(entity);
+            }
+
+            await SaveToFileAsync();
+            return entity;
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public Task<IEnumerable<T>> GetAllAsync()
         {
-            return await Task.FromResult(_entities);
+            return Task.FromResult<IEnumerable<T>>(_entities.ToList());
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public Task<T?> GetByIdAsync(int id)
         {
-            return await Task.FromResult(_entities.Find(e => e.Id == id));
+            return Task.FromResult(_entities.FirstOrDefault(e => e.Id == id));
         }
 
         public async Task<T> UpdateAsync(T entity)
         {
-            var index = _entities.FindIndex(e => e.Id == entity.Id);
-            if (index != -1)
+            lock (_lockObj)
             {
-                _entities[index] = entity;
-                SaveToFile();
+                var index = _entities.FindIndex(e => e.Id == entity.Id);
+                if (index != -1)
+                {
+                    _entities[index] = entity;
+                }
             }
-            return await Task.FromResult(entity);
+
+            await SaveToFileAsync();
+            return entity;
         }
     }
 }

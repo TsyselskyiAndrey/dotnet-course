@@ -1,10 +1,5 @@
 ﻿using Application.Abstractions;
 using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
@@ -17,9 +12,9 @@ namespace Infrastructure.Services
             _userRepository = userRepository;
         }
 
-        public void PublishBook(int userId, Book book)
+        public async Task PublishBookAsync(int userId, Book book)
         {
-            var user = _userRepository.GetUserById(userId);
+            var user = await _userRepository.GetUserByIdAsync(userId);
             if (user == null)
             {
                 Console.WriteLine("User not found!");
@@ -27,37 +22,39 @@ namespace Infrastructure.Services
             }
 
             user.Books.Add(book);
+            await _userRepository.UpdateUserAsync(user);
             Console.WriteLine($"Book '{book.Title}' published by {user.Name}!");
         }
 
-        public IEnumerable<Book> ViewAllBooks()
+        public async Task<IEnumerable<Book>> ViewAllBooksAsync()
         {
-            List<Book> books = new List<Book>();
-            foreach (var user in _userRepository.GetAllUsers())
-            {
-                books.AddRange(user.Books);
-            }
+            var users = await _userRepository.GetAllUsersAsync();
+            var books = users.SelectMany(u => u.Books);
             return books;
         }
 
-        public Book? ReadBook(string title)
+        public async Task<Book?> ReadBookAsync(string title)
         {
-            return ViewAllBooks().Where(b => b.Title == title).FirstOrDefault();
+            var books = await ViewAllBooksAsync();
+            return books.FirstOrDefault(b => b.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
         }
 
-        public IEnumerable<Book> FilterBooks(Func<Book, bool> filter)
+        public async Task<IEnumerable<Book>> FilterBooksAsync(Func<Book, bool> filter)
         {
-            return ViewAllBooks().Where(b => filter(b));
+            var books = await ViewAllBooksAsync();
+            return books.Where(filter);
         }
 
-        public IEnumerable<Book> GetBooksByTitle(Predicate<string> titleFilter)
+        public async Task<IEnumerable<Book>> GetBooksByTitleAsync(Predicate<string> titleFilter)
         {
-            return ViewAllBooks().Where(b => titleFilter(b.Title));
+            var books = await ViewAllBooksAsync();
+            return books.Where(b => titleFilter(b.Title));
         }
 
-        public IEnumerable<Book> GetBooksByAuthor(Predicate<string> authorFilter)
+        public async Task<IEnumerable<Book>> GetBooksByAuthorAsync(Predicate<string> authorFilter)
         {
-            return ViewAllBooks().Where(b => authorFilter(b.Author));
+            var books = await ViewAllBooksAsync();
+            return books.Where(b => authorFilter(b.Author));
         }
     }
 }

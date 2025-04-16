@@ -1,24 +1,20 @@
 ﻿using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Abstractions
 {
     public interface IBookService
     {
-        void PublishBook(int userId, Book book);
+        Task PublishBookAsync(int userId, Book book);
 
-        IEnumerable<Book> ViewAllBooks();
+        Task<IEnumerable<Book>> ViewAllBooksAsync();
 
-        Book? ReadBook(string title);
+        Task<Book?> ReadBookAsync(string title);
 
-        IEnumerable<Book> FilterBooks(Func<Book, bool> filter);
+        Task<IEnumerable<Book>> FilterBooksAsync(Func<Book, bool> filter);
 
-        IEnumerable<Book> GetBooksByTitle(Predicate<string> titleFilter);
+        Task<IEnumerable<Book>> GetBooksByTitleAsync(Predicate<string> titleFilter);
 
-        IEnumerable<Book> GetBooksByAuthor(Predicate<string> authorFilter);
+        Task<IEnumerable<Book>> GetBooksByAuthorAsync(Predicate<string> authorFilter);
+
     }
 }

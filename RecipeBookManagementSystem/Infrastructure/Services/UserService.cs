@@ -1,11 +1,5 @@
 ﻿using Application.Abstractions;
 using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Infrastructure.Services
 {
@@ -18,22 +12,26 @@ namespace Infrastructure.Services
             _userRepository = userRepository;
         }
 
-        public void RegisterUser(string name)
+        public async Task RegisterUserAsync(string name)
         {
-            var newUser = new User();
-            newUser.Id = _userRepository.GetAllUsers().Count() + 1;
-            newUser.Name = name;
-            _userRepository.AddUser(newUser);
+            var users = await _userRepository.GetAllUsersAsync();
+            var newUser = new User
+            {
+                Id = users.Count() + 1,
+                Name = name
+            };
+
+            await _userRepository.AddUserAsync(newUser);
         }
 
-        public User? GetUserById(int userId)
+        public async Task<User?> GetUserByIdAsync(int userId)
         {
-            return _userRepository.GetUserById(userId);
+            return await _userRepository.GetUserByIdAsync(userId);
         }
 
-        public IEnumerable<User>? GetAllUsers()
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            return _userRepository.GetAllUsers();
+            return await _userRepository.GetAllUsersAsync();
         }
     }
 }

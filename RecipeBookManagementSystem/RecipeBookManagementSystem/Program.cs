@@ -6,7 +6,7 @@ namespace RecipeBookManagementSystem
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             IUserRepository userRepository = new UserRepository();
             IUserService userService = new UserService(userRepository);
@@ -34,7 +34,7 @@ namespace RecipeBookManagementSystem
                     case "1":
                         Console.Write("Enter your name: ");
                         string userName = Console.ReadLine()!;
-                        userService.RegisterUser(userName);
+                        await userService.RegisterUserAsync(userName);
                         Console.WriteLine($"\nUser '{userName}' registered successfully!\n");
                         break;
 
@@ -46,7 +46,7 @@ namespace RecipeBookManagementSystem
                             break;
                         }
 
-                        var user = userService.GetUserById(userId);
+                        var user = await userService.GetUserByIdAsync(userId);
                         if (user == null)
                         {
                             Console.WriteLine("User not found!");
@@ -64,12 +64,12 @@ namespace RecipeBookManagementSystem
                             Author = user.Name
                         };
 
-                        bookService.PublishBook(userId, book);
+                        await bookService.PublishBookAsync(userId, book);
                         Console.WriteLine("\nBook published successfully!\n");
                         break;
 
                     case "3":
-                        var books = bookService.ViewAllBooks();
+                        var books = await bookService.ViewAllBooksAsync();
                         if (!books.Any())
                         {
                             Console.WriteLine("No books found.\n");
@@ -87,12 +87,12 @@ namespace RecipeBookManagementSystem
                     case "4":
                         Console.Write("Enter Book Title: ");
                         string bookTitle = Console.ReadLine()!;
-                        var selectedBook = bookService.ReadBook(bookTitle);
+                        var selectedBook = await bookService.ReadBookAsync(bookTitle);
                         Console.WriteLine(selectedBook != null ? $"\n{selectedBook}\n" : "\nBook not found.\n");
                         break;
 
                     case "5":
-                        var users = userService.GetAllUsers();
+                        var users = await userService.GetAllUsersAsync();
                         if (!users.Any())
                         {
                             Console.WriteLine("No users found.\n");
@@ -116,7 +116,7 @@ namespace RecipeBookManagementSystem
                         string ingredients = Console.ReadLine()!;
                         Console.Write("Enter Recipe Instructions: ");
                         string instructions = Console.ReadLine()!;
-                        recipyService.AddRecipe(bookTitleAnother, new Recipe
+                        recipyService?.AddRecipe(bookTitleAnother, new Recipe
                         {
                             Title = recipeTitle,
                             Ingredients = new List<Ingredient>() { new Ingredient { Id = 0, Name = ingredients } },
@@ -128,7 +128,7 @@ namespace RecipeBookManagementSystem
                     case "7":
                         Console.Write("Enter Title to search: ");
                         string searchTitle = Console.ReadLine()!;
-                        var filteredByTitle = bookService.GetBooksByTitle(t => t.Contains(searchTitle, StringComparison.OrdinalIgnoreCase));
+                        var filteredByTitle = await bookService.GetBooksByTitleAsync(t => t.Contains(searchTitle, StringComparison.OrdinalIgnoreCase));
                         Console.WriteLine(filteredByTitle.Any() ? "\n=== Filtered Books ===" : "\nNo books found with that title.\n");
                         foreach (var bookElem in filteredByTitle)
                         {
@@ -139,7 +139,7 @@ namespace RecipeBookManagementSystem
                     case "8":
                         Console.Write("Enter Author to search: ");
                         string searchAuthor = Console.ReadLine()!;
-                        var filteredByAuthor = bookService.GetBooksByAuthor(a => a.Contains(searchAuthor, StringComparison.OrdinalIgnoreCase));
+                        var filteredByAuthor = await bookService.GetBooksByAuthorAsync(a => a.Contains(searchAuthor, StringComparison.OrdinalIgnoreCase));
                         Console.WriteLine(filteredByAuthor.Any() ? "\n=== Filtered Books ===" : "\nNo books found by that author.\n");
                         foreach (var bookElem in filteredByAuthor)
                         {

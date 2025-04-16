@@ -1,18 +1,13 @@
 ﻿using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Abstractions
 {
     public interface IUserService
     {
-        void RegisterUser(string name);
+        Task RegisterUserAsync(string name);
 
-        User? GetUserById(int userId);
+        Task<User?> GetUserByIdAsync(int userId);
 
-        IEnumerable<User>? GetAllUsers();
+        Task<IEnumerable<User>> GetAllUsersAsync();
     }
 }

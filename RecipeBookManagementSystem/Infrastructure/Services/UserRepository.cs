@@ -1,10 +1,5 @@
 ﻿using Application.Abstractions;
 using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
@@ -12,36 +7,37 @@ namespace Infrastructure.Services
     {
         private readonly List<User> _users = new()
         {
-            new User
-            {
-                Id = 1,
-                Name = "Andrew"
-            },
-            new User
-            {
-                Id = 2,
-                Name = "Sergey"
-            },
-            new User
-            {
-                Id = 3,
-                Name = "Alex"
-            }
+            new User { Id = 1, Name = "Andrew" },
+            new User { Id = 2, Name = "Sergey" },
+            new User { Id = 3, Name = "Alex" }
         };
 
-        public void AddUser(User user)
+        public Task AddUserAsync(User user)
         {
             _users.Add(user);
+            return Task.CompletedTask;
         }
 
-        public User? GetUserById(int userId)
+        public Task<User?> GetUserByIdAsync(int userId)
         {
-            return _users.FirstOrDefault(u => u.Id == userId);
+            var user = _users.FirstOrDefault(u => u.Id == userId);
+            return Task.FromResult(user);
         }
 
-        public IEnumerable<User> GetAllUsers()
+        public Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            return _users;
+            return Task.FromResult<IEnumerable<User>>(_users.ToList());
+        }
+
+        public Task<User> UpdateUserAsync(User updatedUser)
+        {
+            var index = _users.FindIndex(u => u.Id == updatedUser.Id);
+            if (index != -1)
+            {
+                _users[index] = updatedUser;
+            }
+
+            return Task.FromResult(updatedUser);
         }
     }
 }
