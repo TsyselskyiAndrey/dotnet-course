@@ -2,6 +2,7 @@
 using Application.DTOs;
 using Core.Models;
 using Infrastructure.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RecipeBookManagementSystem
 {
@@ -9,10 +10,19 @@ namespace RecipeBookManagementSystem
     {
         static void Main(string[] args)
         {
-            IUserRepository userRepository = new UserRepository();
-            IUserService userService = new UserService(userRepository);
-            IBookService bookService = new BookService(userRepository);
-            IRecipeService recipyService = new RecipeService(bookService);
+            var services = new ServiceCollection();
+            services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IUserService, UserService>();
+            services.AddSingleton<IBookService, BookService>();
+            services.AddSingleton<IRecipeService, RecipeService>();
+
+            var serviceProvider = services.BuildServiceProvider();
+
+
+            var userService = serviceProvider.GetRequiredService<IUserService>();
+            var bookService = serviceProvider.GetRequiredService<IBookService>();
+            var recipeService = serviceProvider.GetRequiredService<IRecipeService>();
+
             while (true)
             {
                 Console.WriteLine("\n===== Recipe Book Management System =====");
@@ -117,7 +127,7 @@ namespace RecipeBookManagementSystem
                         string ingredients = Console.ReadLine()!;
                         Console.Write("Enter Recipe Instructions: ");
                         string instructions = Console.ReadLine()!;
-                        recipyService.AddRecipe(bookTitleAnother, new RecipeDto
+                        recipeService.AddRecipe(bookTitleAnother, new RecipeDto
                         {
                             Title = recipeTitle,
                             Ingredients = new List<Ingredient>() { new Ingredient { Id = 0, Name = ingredients } },
