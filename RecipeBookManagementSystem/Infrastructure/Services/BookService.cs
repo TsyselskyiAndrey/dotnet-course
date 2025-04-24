@@ -1,10 +1,7 @@
 ﻿using Application.Abstractions;
+using Application.DTOs;
 using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Infrastructure.Mappers;
 
 namespace Infrastructure.Services
 {
@@ -17,7 +14,7 @@ namespace Infrastructure.Services
             _userRepository = userRepository;
         }
 
-        public void PublishBook(int userId, Book book)
+        public void PublishBook(int userId, BookDto book)
         {
             var user = _userRepository.GetUserById(userId);
             if (user == null)
@@ -25,37 +22,43 @@ namespace Infrastructure.Services
                 Console.WriteLine("User not found!");
                 return;
             }
-
-            user.Books.Add(book);
+            var mapper = new Mapper<BookDto, Book>();
+            Book res = (Book)mapper.Map(book);
+            user.Books.Add(res);
             Console.WriteLine($"Book '{book.Title}' published by {user.Name}!");
         }
 
-        public IEnumerable<Book> ViewAllBooks()
+        public IEnumerable<BookDto> ViewAllBooks()
         {
             List<Book> books = new List<Book>();
             foreach (var user in _userRepository.GetAllUsers())
             {
                 books.AddRange(user.Books);
             }
-            return books;
+            var mapper = new Mapper<Book, BookDto>();
+            List<BookDto> res = (List<BookDto>)mapper.Map(books);
+            return res;
         }
 
-        public Book? ReadBook(string title)
+        public BookDto? ReadBook(string title)
         {
             return ViewAllBooks().Where(b => b.Title == title).FirstOrDefault();
         }
 
-        public IEnumerable<Book> FilterBooks(Func<Book, bool> filter)
+        public IEnumerable<BookDto> FilterBooks(Func<BookDto, bool> filter)
         {
-            return ViewAllBooks().Where(b => filter(b));
+            return ViewAllBooks().Where(b =>
+            {
+                return filter(b);
+            });
         }
 
-        public IEnumerable<Book> GetBooksByTitle(Predicate<string> titleFilter)
+        public IEnumerable<BookDto> GetBooksByTitle(Predicate<string> titleFilter)
         {
             return ViewAllBooks().Where(b => titleFilter(b.Title));
         }
 
-        public IEnumerable<Book> GetBooksByAuthor(Predicate<string> authorFilter)
+        public IEnumerable<BookDto> GetBooksByAuthor(Predicate<string> authorFilter)
         {
             return ViewAllBooks().Where(b => authorFilter(b.Author));
         }

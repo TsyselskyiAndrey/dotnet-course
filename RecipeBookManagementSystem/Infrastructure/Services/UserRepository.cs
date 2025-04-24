@@ -1,10 +1,7 @@
 ﻿using Application.Abstractions;
+using Application.DTOs;
 using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Infrastructure.Mappers;
 
 namespace Infrastructure.Services
 {
@@ -29,19 +26,31 @@ namespace Infrastructure.Services
             }
         };
 
-        public void AddUser(User user)
+        public void AddUser(UserDto user)
         {
-            _users.Add(user);
+            var mapper = new Mapper<UserDto, User>();
+            User res = (User)mapper.Map(user);
+            res.Id = _users.Count + 1;
+            _users.Add(res);
         }
 
-        public User? GetUserById(int userId)
+        public UserDto? GetUserById(int userId)
         {
-            return _users.FirstOrDefault(u => u.Id == userId);
+            var mapper = new Mapper<User, UserDto>();
+            var user = _users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return null;
+            }
+            UserDto res = (UserDto)mapper.Map(user);
+            return res;
         }
 
-        public IEnumerable<User> GetAllUsers()
+        public IEnumerable<UserDto> GetAllUsers()
         {
-            return _users;
+            var mapper = new Mapper<User, UserDto>();
+            List<UserDto> res = (List<UserDto>)mapper.Map(_users);
+            return res;
         }
     }
 }
